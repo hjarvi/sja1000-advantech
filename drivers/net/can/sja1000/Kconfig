@@ -1,0 +1,10 @@
+if CAN_SJA1000
+
+config CAN_ADV_PCI
+       tristate "Deniz EREN 22/07/2016: Advantech PCI3680 based SJA1000 Cards"
+       depends on PCI
+       ---help---
+         Deniz EREN 22/07/2016: This driver is for the Advantech PCI3680
+         2 channel SJA1000 based CAN cards.
+
+endif
