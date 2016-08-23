@@ -122,29 +122,20 @@ static void adv_pci_write_reg(const struct sja1000_priv *priv,
 
 static int adv_pci_device_support_check(const struct pci_dev *pdev)
 {
-	int err = 0;
+	int err, found;
+	struct pci_device_id *ids;
 
-	switch (pdev->device) {
-	case ADV_PCI_DEVICE_ID01:
-	case ADV_PCI_DEVICE_ID02:
-	case ADV_PCI_DEVICE_ID03:
-	case ADV_PCI_DEVICE_ID04:
-	case ADV_PCI_DEVICE_ID05:
-	case ADV_PCI_DEVICE_ID06:
-	case ADV_PCI_DEVICE_ID07:
-	case ADV_PCI_DEVICE_ID08:
-	case ADV_PCI_DEVICE_ID09:
-	case ADV_PCI_DEVICE_ID10:
-	case ADV_PCI_DEVICE_ID11:
-	case ADV_PCI_DEVICE_ID12:
-	case ADV_PCI_DEVICE_ID13:
-	case ADV_PCI_DEVICE_ID14:
-	case ADV_PCI_DEVICE_ID15:
-	case ADV_PCI_DEVICE_ID16:
-		break;
-	default:
-		err = -ENOMEM;
-		break;
+	ids = adv_pci_tbl;
+	err = -ENOMEM;
+
+	if (ids) {
+		while (ids->vendor || ids->subvendor || ids->class_mask) {
+			if (ids->device == pdev->device) {
+				err = 0;
+				break;
+			}
+			ids++;
+		}
 	}
 
 	return err;
