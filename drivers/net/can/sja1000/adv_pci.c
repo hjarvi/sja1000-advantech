@@ -44,6 +44,10 @@ struct adv_pci {
 	int no_channels;
 };
 
+struct adv_board_data {
+	int reg_shift;
+};
+
 #define ADV_PCI_CAN_CLOCK      (16000000 / 2)
 
 /*
@@ -103,17 +107,17 @@ MODULE_DEVICE_TABLE(pci, adv_pci_tbl);
 
 static u8 adv_pci_read_reg(const struct sja1000_priv *priv, int port)
 {
-	int reg_shift = *(int *)priv->priv;
+	struct adv_board_data *board_data = priv->priv;
 
-	return ioread8(priv->reg_base + (port << reg_shift));
+	return ioread8(priv->reg_base + (port << board_data->reg_shift));
 }
 
 static void adv_pci_write_reg(const struct sja1000_priv *priv,
 				int port, u8 val)
 {
-	int reg_shift = *(int *)priv->priv;
+	struct adv_board_data *board_data = priv->priv;
 
-	iowrite8(val, priv->reg_base + (port << reg_shift));
+	iowrite8(val, priv->reg_base + (port << board_data->reg_shift));
 }
 
 static int adv_pci_device_support_check(const struct pci_dev *pdev)
@@ -301,6 +305,7 @@ static int adv_pci_add_chan(struct pci_dev *pdev, int channel, int bar_no)
 	struct net_device *dev;
 	struct sja1000_priv *priv;
 	struct adv_pci *board;
+	struct adv_board_data *board_data;
 	int err;
 	int bar_offset, reg_shift;
 
@@ -308,12 +313,14 @@ static int adv_pci_add_chan(struct pci_dev *pdev, int channel, int bar_no)
 	bar_offset = adv_pci_bar_offset(pdev);
 	reg_shift = adv_pci_reg_shift(pdev);
 
-	dev = alloc_sja1000dev(sizeof(int /* reg_shift */));
+	dev = alloc_sja1000dev(sizeof(adv_board_data));
 	if (dev == NULL)
 		return -ENOMEM;
 
 	priv = netdev_priv(dev);
-	*(int *)priv->priv = reg_shift;
+	board_data = priv->priv;
+
+	board_data->reg_shift = reg_shift;
 
 	priv->reg_base = pci_iomap(pdev, bar_no, 128) + bar_offset * channel;
 
