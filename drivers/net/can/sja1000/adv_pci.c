@@ -122,8 +122,8 @@ static void adv_pci_write_reg(const struct sja1000_priv *priv,
 
 static int adv_pci_device_support_check(const struct pci_dev *pdev)
 {
-	int err, found;
-	struct pci_device_id *ids;
+	int err;
+	const struct pci_device_id *ids;
 
 	ids = adv_pci_tbl;
 	err = -ENOMEM;
@@ -304,7 +304,7 @@ static int adv_pci_add_chan(struct pci_dev *pdev, int channel, int bar_no)
 	bar_offset = adv_pci_bar_offset(pdev);
 	reg_shift = adv_pci_reg_shift(pdev);
 
-	dev = alloc_sja1000dev(sizeof(adv_board_data));
+	dev = alloc_sja1000dev(sizeof(struct adv_board_data));
 	if (dev == NULL)
 		return -ENOMEM;
 
@@ -370,8 +370,6 @@ static void adv_pci_remove_one(struct pci_dev *pdev)
 static int adv_pci_init_one(struct pci_dev *pdev,
 				const struct pci_device_id *ent)
 {
-	struct sja1000_priv *priv;
-	struct net_device *dev;
 	struct adv_pci *board;
 
 	int i, err;
