@@ -259,7 +259,7 @@ static int adv_pci_reset(const struct sja1000_priv *priv)
 	return 0;
 }
 
-static void adv_pci_del_chan(struct pci_dev *pdev)
+static void adv_pci_del_all_channels(struct pci_dev *pdev)
 {
 	struct net_device *dev;
 	struct sja1000_priv *priv;
@@ -349,7 +349,7 @@ static int adv_pci_add_chan(struct pci_dev *pdev, int channel, int bar_no)
 	return 0;
 
 failure:
-	adv_pci_del_chan(pdev);
+	adv_pci_del_all_channels(pdev);
 	return err;
 }
 
@@ -359,7 +359,7 @@ static void adv_pci_remove_one(struct pci_dev *pdev)
 
 	dev_info(&pdev->dev, "Removing card");
 
-	adv_pci_del_chan(pdev);
+	adv_pci_del_all_channels(pdev);
 
 	kfree(board);
 
