@@ -1,11 +1,13 @@
 /*
 * Copyright (C) 2016 Deniz Eren <deniz.eren@icloud.com>
-* Copyright (C) 2016 Roel van de Kraats <rkraats@dds.nl>
 *
 * Parts of this software are based on (derived) the following:
 *
 * - Driver for CAN cards (PCIE-1680/PCI-1680/PCM-3680/PCL-841/MIC-3680)
 *   Copyright (C) 2011, ADVANTECH Co, Ltd.
+*
+* - git://git.toiit.sgu.ru/people/samarkinpa/public/adv_pci.git
+*   Copyright (C) 2011 Pavel Samarkin <pavel.samarkin@gmail.com>
 *
 * This program is free software; you can redistribute it and/or modify
 * it under the terms of the version 2 of the GNU General Public License
