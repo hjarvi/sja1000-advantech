@@ -84,6 +84,8 @@ struct adv_board_data {
 #define ADV_PCI_DEVICE_ID14       0xc301
 #define ADV_PCI_DEVICE_ID15       0xc302
 #define ADV_PCI_DEVICE_ID16       0xc304
+#define ADV_PCI_DEVICE_ID_00c5h   0x00c5
+#define ADV_PCI_DEVICE_ID_00d7h   0x00d7
 
 static const struct pci_device_id adv_pci_tbl[] = {
 	{ADV_PCI_VENDOR_ID, ADV_PCI_DEVICE_ID01, PCI_ANY_ID, PCI_ANY_ID,},
@@ -102,6 +104,8 @@ static const struct pci_device_id adv_pci_tbl[] = {
 	{ADV_PCI_VENDOR_ID, ADV_PCI_DEVICE_ID14, PCI_ANY_ID, PCI_ANY_ID,},
 	{ADV_PCI_VENDOR_ID, ADV_PCI_DEVICE_ID15, PCI_ANY_ID, PCI_ANY_ID,},
 	{ADV_PCI_VENDOR_ID, ADV_PCI_DEVICE_ID16, PCI_ANY_ID, PCI_ANY_ID,},
+	{ADV_PCI_VENDOR_ID, ADV_PCI_DEVICE_ID_00c5h, PCI_ANY_ID, PCI_ANY_ID,},
+	{ADV_PCI_VENDOR_ID, ADV_PCI_DEVICE_ID_00d7h, PCI_ANY_ID, PCI_ANY_ID,},
 	{0,}
 };
 
@@ -150,6 +154,8 @@ static int number_of_sja1000_chips(const struct pci_dev *pdev)
 	switch (pdev->device) {
 	case ADV_PCI_DEVICE_ID01:
 	case ADV_PCI_DEVICE_ID03:
+	case ADV_PCI_DEVICE_ID_00c5h:
+	case ADV_PCI_DEVICE_ID_00d7h:
 		no_of_chips = 2;
 		break;
 	case ADV_PCI_DEVICE_ID04:
@@ -191,6 +197,8 @@ static int adv_pci_bar_offset(const struct pci_dev *pdev)
 	case ADV_PCI_DEVICE_ID14:
 	case ADV_PCI_DEVICE_ID15:
 	case ADV_PCI_DEVICE_ID16:
+	case ADV_PCI_DEVICE_ID_00c5h:
+	case ADV_PCI_DEVICE_ID_00d7h:
 		bar_offset = 0x400;
 		break;
 	case ADV_PCI_DEVICE_ID01:
@@ -233,6 +241,10 @@ static int adv_pci_reg_shift(struct pci_dev *pdev)
 	case ADV_PCI_DEVICE_ID14:
 	case ADV_PCI_DEVICE_ID15:
 	case ADV_PCI_DEVICE_ID16:
+	case ADV_PCI_DEVICE_ID_00c5h:
+	case ADV_PCI_DEVICE_ID_00d7h:
+		// These devices support memory mapped IO.
+		// (not implemented by the driver)
 		reg_shift = 2;
 		break;
 	default:
