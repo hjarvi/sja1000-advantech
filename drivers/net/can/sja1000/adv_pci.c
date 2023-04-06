@@ -378,8 +378,8 @@ static void adv_pci_remove_one(struct pci_dev *pdev)
 
 	kfree(board);
 
+	pci_free_irq_vectors(pdev);
 	pci_disable_device(pdev);
-	pci_disable_msi(pdev);
 	pci_set_drvdata(pdev, NULL);
 }
 
@@ -388,7 +388,7 @@ static int adv_pci_init_one(struct pci_dev *pdev,
 {
 	struct adv_pci *board;
 
-	int i, err;
+	int i, err, ret;
 	int no_channels, bar_no, is_multi_bar;
 
 	err = 0;
@@ -422,8 +422,8 @@ static int adv_pci_init_one(struct pci_dev *pdev,
 
 	pci_set_drvdata(pdev, board);
 
-	err = pci_enable_msi(pdev);
-	if (err) {
+	ret = pci_alloc_irq_vectors(pdev, 1, 1, PCI_IRQ_MSI);
+	if (ret < 0) {
 		dev_info(&pdev->dev, "MSI not available\n");
 	} else {
 		pci_set_master(pdev);
